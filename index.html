@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A private job application tracker with secure user accounts.">
+  <title>Trackly — Job Application Tracker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Trackly home">
+      <span class="brand-mark">T</span>
+      <span>Trackly</span>
+    </a>
+    <p>Keep every application in one private place.</p>
+  </header>
+
+  <main class="page-shell">
+    <section class="welcome" id="welcome">
+      <div class="welcome-copy">
+        <p class="eyebrow">Job application tracker</p>
+        <h1>Your job search,<br>clearly organised.</h1>
+        <p class="intro">
+          Save applications, track progress, search your records and export everything
+          when you need it. Your information is connected only to your account.
+        </p>
+        <ul class="feature-list">
+          <li><span>✓</span> Private account and password</li>
+          <li><span>✓</span> Track every application status</li>
+          <li><span>✓</span> Works on phone and computer</li>
+        </ul>
+      </div>
+
+      <section class="auth-card" aria-labelledby="authTitle">
+        <div class="auth-tabs" role="tablist" aria-label="Account options">
+          <button class="auth-tab active" id="loginTab" type="button" role="tab" aria-selected="true">Log in</button>
+          <button class="auth-tab" id="signupTab" type="button" role="tab" aria-selected="false">Create account</button>
+        </div>
+
+        <form id="loginForm" novalidate>
+          <p class="eyebrow">Welcome back</p>
+          <h2 id="authTitle">Log in to your tracker</h2>
+          <label for="loginEmail">Email address</label>
+          <input id="loginEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+          <label for="loginPassword">Password</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" minlength="6" placeholder="Your password" required>
+          <button class="button primary full" type="submit">Log in</button>
+        </form>
+
+        <form id="signupForm" class="hidden" novalidate>
+          <p class="eyebrow">Start fresh</p>
+          <h2>Create your private account</h2>
+          <label for="signupEmail">Email address</label>
+          <input id="signupEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+          <label for="signupPassword">Password</label>
+          <input id="signupPassword" type="password" autocomplete="new-password" minlength="6" placeholder="At least 6 characters" required>
+          <label for="signupConfirm">Confirm password</label>
+          <input id="signupConfirm" type="password" autocomplete="new-password" minlength="6" placeholder="Repeat your password" required>
+          <button class="button primary full" type="submit">Create account</button>
+        </form>
+
+        <p class="form-message" id="authMessage" aria-live="polite"></p>
+        <p class="privacy-note">Your applications are stored separately under your signed-in account.</p>
+      </section>
+    </section>
+
+    <section class="dashboard hidden" id="dashboard">
+      <div class="dashboard-header">
+        <div>
+          <p class="eyebrow">My dashboard</p>
+          <h1>Application tracker</h1>
+          <p class="signed-in">Signed in as <strong id="userEmail"></strong></p>
+        </div>
+        <div class="header-actions">
+          <button class="button secondary" id="exportButton" type="button">Export CSV</button>
+          <button class="button dark" id="logoutButton" type="button">Log out</button>
+        </div>
+      </div>
+
+      <div class="stats" aria-label="Application totals">
+        <article><span>Total</span><strong id="total">0</strong></article>
+        <article><span>Pending</span><strong id="pending">0</strong></article>
+        <article><span>Interviews</span><strong id="interview">0</strong></article>
+        <article><span>Accepted</span><strong id="accepted">0</strong></article>
+      </div>
+
+      <section class="editor-card" aria-labelledby="editorTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Application details</p>
+            <h2 id="editorTitle">Add an application</h2>
+          </div>
+          <button class="text-button hidden" id="cancelEditButton" type="button">Cancel editing</button>
+        </div>
+
+        <form id="applicationForm" class="application-form" novalidate>
+          <label>Date
+            <input type="date" id="date" required>
+          </label>
+          <label>Company
+            <input type="text" id="company" maxlength="100" placeholder="Company name" required>
+          </label>
+          <label>Role
+            <input type="text" id="role" maxlength="120" placeholder="Position title" required>
+          </label>
+          <label>Status
+            <select id="status">
+              <option value="Pending">Pending</option>
+              <option value="Interview">Interview</option>
+              <option value="Accepted">Accepted</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </label>
+          <label>Contact email <span>(optional)</span>
+            <input type="email" id="contactEmail" maxlength="160" placeholder="recruiter@company.com">
+          </label>
+          <label>Phone <span>(optional)</span>
+            <input type="tel" id="phone" maxlength="40" placeholder="Phone number">
+          </label>
+          <label class="wide">Notes or job link <span>(optional)</span>
+            <input type="text" id="note" maxlength="500" placeholder="Interview notes or https://job-link.com">
+          </label>
+          <button class="button primary form-submit" id="saveButton" type="submit">Add application</button>
+        </form>
+        <p class="form-message" id="applicationMessage" aria-live="polite"></p>
+      </section>
+
+      <section class="records" aria-labelledby="recordsTitle">
+        <div class="records-header">
+          <div>
+            <p class="eyebrow">Saved applications</p>
+            <h2 id="recordsTitle">Your applications</h2>
+          </div>
+          <div class="filters">
+            <label class="sr-only" for="search">Search applications</label>
+            <input id="search" type="search" placeholder="Search company or role">
+            <label class="sr-only" for="filter">Filter by status</label>
+            <select id="filter">
+              <option value="All">All statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="Interview">Interview</option>
+              <option value="Accepted">Accepted</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">＋</div>
+          <h3>No applications yet</h3>
+          <p>Add your first application above. Nothing is preloaded into your account.</p>
+        </div>
+
+        <div class="table-wrap hidden" id="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Contact</th>
+                <th>Notes</th>
+                <th><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p>Trackly stores each user’s records under their authenticated account.</p>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
